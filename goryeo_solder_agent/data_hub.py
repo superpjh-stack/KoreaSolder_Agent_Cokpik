@@ -269,7 +269,10 @@ class _PgConnection:
     def __exit__(self, typ, value, tb):
         self.raw.rollback() if typ else self.raw.commit(); self.raw.close()
     def execute(self, sql, params=()): return self.raw.execute(sql.replace("?", "%s"), params)
-    def executemany(self, sql, values): return self.raw.executemany(sql.replace("?", "%s"), values)
+    def executemany(self, sql, values):
+        # psycopg3 exposes executemany on cursors, not on Connection.
+        with self.raw.cursor() as cursor:
+            return cursor.executemany(sql.replace("?", "%s"), values)
     def executescript(self, script):
         for statement in script.split(";"):
             if statement.strip(): self.execute(statement)
