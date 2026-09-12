@@ -248,7 +248,7 @@ class PostgresRepository(GoryeoSolderRepository):
     def __init__(self, url):
         import psycopg
         self.url = url
-        with psycopg.connect(url) as raw:
+        with psycopg.connect(url, options="-c client_encoding=UTF8") as raw:
             raw.execute("CREATE EXTENSION IF NOT EXISTS vector")
         self._initialize()
         with self._connect() as c:
@@ -258,8 +258,7 @@ class PostgresRepository(GoryeoSolderRepository):
     def _connect(self):
         import psycopg
         from pgvector.psycopg import register_vector
-        raw = psycopg.connect(self.url, row_factory=_compat_row)
-        raw.execute("SET client_encoding TO 'UTF8'")
+        raw = psycopg.connect(self.url, options="-c client_encoding=UTF8", row_factory=_compat_row)
         register_vector(raw)
         return _PgConnection(raw)
 
