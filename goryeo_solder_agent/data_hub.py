@@ -259,6 +259,7 @@ class PostgresRepository(GoryeoSolderRepository):
         import psycopg
         from pgvector.psycopg import register_vector
         raw = psycopg.connect(self.url, row_factory=_compat_row)
+        raw.execute("SET client_encoding TO 'UTF8'")
         register_vector(raw)
         return _PgConnection(raw)
 
