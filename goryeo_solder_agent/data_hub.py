@@ -283,7 +283,9 @@ class _CompatRow(dict):
 
 
 def _compat_row(cursor):
-    columns = [desc.name for desc in cursor.description]
+    # psycopg invokes the row factory for DDL/DML too; those cursors have no
+    # description, so there is no row shape to build.
+    columns = [desc.name for desc in (cursor.description or [])]
     return lambda values: _CompatRow(zip(columns, values))
 
 
