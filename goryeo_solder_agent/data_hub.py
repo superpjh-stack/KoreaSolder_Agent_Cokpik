@@ -152,12 +152,17 @@ class GoryeoSolderRepository:
 
     def dashboard(self):
         with self._connect() as c:
+            active = c.execute("SELECT progress_pct FROM work_orders").fetchall()
+            readings = c.execute("SELECT status FROM process_readings").fetchall()
+            incoming = c.execute("SELECT final_result FROM incoming_inspections").fetchall()
+            quality = c.execute("SELECT final_result FROM quality_inspections").fetchall()
+            shipments = c.execute("SELECT status FROM shipments").fetchall()
             return {
-                "active_orders": c.execute("SELECT COUNT(*) FROM work_orders WHERE progress_pct<100").fetchone()[0],
-                "melt_alerts": c.execute("SELECT COUNT(*) FROM process_readings WHERE status LIKE '%주의%'").fetchone()[0],
-                "incoming_holds": c.execute("SELECT COUNT(*) FROM incoming_inspections WHERE final_result!='합격'").fetchone()[0],
-                "quality_holds": c.execute("SELECT COUNT(*) FROM quality_inspections WHERE final_result!='합격'").fetchone()[0],
-                "shipment_pending": c.execute("SELECT COUNT(*) FROM shipments WHERE status!='출하완료'").fetchone()[0],
+                "active_orders": sum(1 for row in active if row[0] < 100),
+                "melt_alerts": sum(1 for row in readings if "주의" in row[0]),
+                "incoming_holds": sum(1 for row in incoming if row[0] != "합격"),
+                "quality_holds": sum(1 for row in quality if row[0] != "합격"),
+                "shipment_pending": sum(1 for row in shipments if row[0] != "출하완료"),
             }
 
     def get_work_orders(self, work_order=None, status=None):
