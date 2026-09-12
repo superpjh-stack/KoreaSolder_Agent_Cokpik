@@ -1,0 +1,9 @@
+[
+ {"rule_id":"GR-001","name":"보류 원료 투입 차단","source_table":"raw_material_lots","condition":"quarantine_status가 사용가능이 아니면 보류","owner":"품질책임자","action":"투입 전 승인 문서 확인","source_document":"KS-KB-003","revision":"DEMO-0.1","status":"데모"},
+ {"rule_id":"GR-002","name":"성적서 미첨부 확인","source_table":"incoming_inspections","condition":"final_result가 합격이 아니면 확인","owner":"품질팀","action":"성적서·조성 재확인","source_document":"KS-KB-003","revision":"DEMO-0.1","status":"데모"},
+ {"rule_id":"GR-003","name":"용해 주의 표시","source_table":"process_readings","condition":"status에 주의가 포함되면 표시","owner":"생산팀","action":"작업자 확인 요청","source_document":"KS-KB-005","revision":"DEMO-0.1","status":"데모"},
+ {"rule_id":"GR-004","name":"조건부 품질 출하 검토","source_table":"quality_inspections","condition":"final_result가 합격이 아니면 출하 검토","owner":"품질팀","action":"승인자 확인","source_document":"KS-KB-007","revision":"DEMO-0.1","status":"데모"},
+ {"rule_id":"GR-005","name":"라벨 추적 연결","source_table":"packages","condition":"label_status 확인","owner":"출하팀","action":"작업지시·배치 연결 점검","source_document":"KS-KB-008","revision":"DEMO-0.1","status":"데모"},
+ {"rule_id":"GR-006","name":"출하 승인 대기","source_table":"shipments","condition":"status가 출하완료가 아니면 대기","owner":"출하팀","action":"품질 승인 확인","source_document":"KS-KB-009","revision":"DEMO-0.1","status":"데모"},
+ {"rule_id":"GR-007","name":"데모 데이터 경계","source_table":"knowledge_documents","condition":"status가 데모·미승인이면 참고용","owner":"운영팀","action":"실제 승인본 요청","source_document":"KS-KB-010","revision":"DEMO-0.1","status":"데모"}
+]
